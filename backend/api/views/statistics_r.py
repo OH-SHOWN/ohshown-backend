@@ -380,7 +380,7 @@ def get_report_records_count_by_townname(request):
                                 type=openapi.TYPE_INTEGER,
                                 description="已經被回報的工廠的數量 (如果一個工廠有被回報多次，只會以一次計算)",
                             ),
-                            {DocumentDisplayStatusConst.IN_PROGRESS}: openapi.Schema(
+                            DocumentDisplayStatusConst.IN_PROGRESS: openapi.Schema(
                                 type=openapi.TYPE_INTEGER,
                                 description=f"""
                                     狀態為 {DocumentDisplayStatusConst.AUDIT_SCHEDULED}, {DocumentDisplayStatusConst.COMMUNICATION_PERIOD}, {DocumentDisplayStatusConst.WORK_STOPPED}, {DocumentDisplayStatusConst.DEMOLITION_SCHEDULED} 的工廠數量
