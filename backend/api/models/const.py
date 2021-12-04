@@ -7,7 +7,7 @@ class DocumentDisplayStatusConst:
     POWER_OUTED = "已斷電"
     DEMOLITION_SCHEDULED = "已排程拆除"
     DEMOLISHED = "已拆除"
-    NO_LONGER_FOLLOW = "不再追蹤"
+    WAITING_FOR_NEW_EVIDENCE = "等待新事證"
     IN_PROGRESS = "處理中"
     OPEN = "未處理"
 
@@ -18,6 +18,6 @@ class DocumentDisplayStatusConst:
                    POWER_OUTING,
                    DEMOLITION_SCHEDULED,
                    DEMOLISHED,
-                   NO_LONGER_FOLLOW]
+                   WAITING_FOR_NEW_EVIDENCE]
 
     STATUS_LIST_ENRICHMENT = STATUS_LIST + [IN_PROGRESS]
