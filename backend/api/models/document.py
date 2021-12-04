@@ -100,6 +100,7 @@ class FollowUp(SoftDeleteMixin):
     )
     note = models.TextField(help_text="此次進度追蹤備註")
     created_at = models.DateTimeField(auto_now_add=True)
+    for_user = models.BooleanField(default=False)
 
     def __unicode__(self):
         return f"#{self.id}"
