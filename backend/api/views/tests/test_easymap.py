@@ -1,5 +1,7 @@
 import easymap
+import pytest
 
+@pytest.mark.skip(reason="No valid token and may be useless feature.")
 def test_get_land_number():
     # 120.1074406, 23.2353021
     # 臺南市北門區 溪底寮段三寮灣小段 (5404) 1681地號

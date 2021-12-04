@@ -1,8 +1,9 @@
 import os
 import logging
+import time
 
 from urllib.parse import urljoin
-from api.models.document import Document
+from api.models.document import Document, FollowUp
 from django.db.models import Max
 
 from django.contrib import admin
@@ -91,8 +92,8 @@ class DescriptionInline(admin.TabularInline):
     can_delete = False
     show_change_link = False
     max_num = 0
-    fields = ("created_at", "others", "user_ip")
-    readonly_fields = ("created_at", "others", "user_ip")
+    fields = ("created_at", "others")
+    readonly_fields = ("created_at", "others")
     extra = 0
 
 
@@ -105,7 +106,6 @@ class ReportRecordInline(admin.TabularInline):
         "others",
         "action_type",
         "action_body",
-        "user_ip",
         "id",
     )
     readonly_fields = (
@@ -115,7 +115,6 @@ class ReportRecordInline(admin.TabularInline):
         "others",
         "action_type",
         "action_body",
-        "user_ip",
         "id",
     )
     extra = 0
@@ -222,6 +221,7 @@ class FactoryAdmin(
         "updated_at",
         "google_map_link",
         "disfactory_map_link",
+        "follow_ups_for_user",
     )
     fieldsets = (
         (
@@ -251,6 +251,7 @@ class FactoryAdmin(
                     "name",
                     ("created_at", "updated_at"),
                     # TODO: "cet_doc_number",
+                    "follow_ups_for_user",
                 ),
             },
         ),
@@ -288,6 +289,30 @@ class FactoryAdmin(
         html_template = f"<a href='{url}' target='_blank'>Link</a>"
 
         return format_html(html_template)
+
+    @set_function_attributes(short_description="Follow ups for user")
+    def follow_ups_for_user(self, obj):
+        document_id_list = Document.objects.only("id").filter(factory=obj)
+        follow_up_query_set = FollowUp.objects.filter(document__in=document_id_list, for_user=True)
+
+        if follow_up_query_set:
+            note_list = []
+            for follow_up in follow_up_query_set:
+                created_at = follow_up.created_at.strftime("%Y-%m-%d %H:%M:%S")
+                note_list.append(f"<tr><td>{follow_up.note}</td><td>{created_at}</td><td>{follow_up.document_id}</td></tr>")
+
+            return format_html(f"""
+                <table>
+                    <tr>
+                        <th>Note</th>
+                        <th>Created At</th>
+                        <th>Document Id</th>
+                    </tr>
+                    {"".join(note_list)}
+                </table>
+            """)
+        else:
+            return ""
 
     def save_model(self, request, obj, form, change):
         try:
