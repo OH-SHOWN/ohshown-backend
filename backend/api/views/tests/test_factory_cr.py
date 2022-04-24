@@ -97,6 +97,7 @@ def test_create_new_factory_db_status_correct(client):
         "lng": lng,
         "nickname": nickname,
         "contact": contact,
+        "datetime": datetime.datetime(2019, 10, 10, 10, 10, 10, tzinfo=datetime.timezone.utc).isoformat(),
     }
 
     test_time = datetime.datetime(2019, 11, 11, 11, 11, 11, tzinfo=datetime.timezone.utc)
@@ -160,6 +161,7 @@ def test_create_new_factory_allow_no_contact(client):
         "lat": 23.234,
         "lng": 120.1,
         "nickname": "",
+        "datetime": datetime.datetime(2019, 10, 10, 10, 10, 10, tzinfo=datetime.timezone.utc).isoformat(),
     }
     resp = client.post("/api/ohshown-events", data=request_body, content_type="application/json")
 
@@ -174,6 +176,7 @@ def test_create_new_factory_allow_empty_type(client):
         "lat": 23.234,
         "lng": 120.1,
         "nickname": "",
+        "datetime": datetime.datetime(2019, 10, 10, 10, 10, 10, tzinfo=datetime.timezone.utc).isoformat(),
     }
     resp = client.post("/api/ohshown-events", data=request_body, content_type="application/json")
 
@@ -256,6 +259,7 @@ def test_create_factory_after_delete_the_latest_factory_with_maximum_display_num
         "lng": lng,
         "nickname": nickname,
         "contact": contact,
+        "datetime": datetime.datetime(2019, 10, 10, 10, 10, 10, tzinfo=datetime.timezone.utc).isoformat(),
     }
 
     test_time = datetime.datetime(2019, 11, 11, 11, 11, 11, tzinfo=datetime.timezone.utc)

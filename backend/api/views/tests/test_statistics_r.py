@@ -42,6 +42,7 @@ def create_factory(cli):
         "lng": lng,
         "nickname": nickname,
         "contact": contact,
+        "datetime": datetime.datetime(2019, 10, 10, 10, 10, 10, tzinfo=datetime.timezone.utc).isoformat(),
     }
 
     test_time = datetime.datetime(2019, 11, 11, 11, 11, 11, tzinfo=datetime.timezone.utc)
