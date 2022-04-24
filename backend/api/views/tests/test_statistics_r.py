@@ -13,7 +13,7 @@ def test_get_factory_statistics(client):
     # Create 10 factories in 臺北市中山區
     id_list = []
     for index in range(0, 10):
-        result = create_factory(client)
+        result, *others = create_factory(client)
         id_list.append(result)
 
     # TODO: interesting, this api still works even we have refactored /api/factory to /api/ohshown-events
@@ -168,10 +168,13 @@ def test_get_report_records_statistics(client):
 
 
 def test_get_total(client):
-    id_list = [
-        create_factory(client)
-        for _ in range(10)
-    ]
+    # note: asterisk sign a.k.a. * for tuple unpacking is not supported in list comprehension
+    # the feature was taken out of PEP 448 for readability
+    # see Variations session of PEP 448 https://peps.python.org/pep-0448/#variations
+    id_list = []
+    for index in range(0, 10):
+        result, *others = create_factory(client)
+        id_list.append(result)
 
     for factory_id in id_list:
         Document.objects.create(
