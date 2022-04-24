@@ -126,6 +126,7 @@ class OhshownEvent(SoftDeleteMixin):
         null=True,
     )  # 審查人
 
+    sight_see_date_time = models.DateTimeField(auto_now_add=True)
     status_time = models.DateTimeField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
