@@ -7,8 +7,8 @@ from conftest import Unordered
 
 @pytest.mark.django_db
 def test_migration_seed_data_correctly():
-    longitude = 120.1
-    latitude = 23.234
+    longitude = 120.092
+    latitude = 23.090
     radius_km = 1
 
     distance = 6371 * ACos(
@@ -23,8 +23,8 @@ def test_migration_seed_data_correctly():
     assert (
         list(factories.values_list('name', flat=True))
         == Unordered([
-            "既有違章工廠 No.2",
-            "既有違章工廠 No.3",
-            "既有違章工廠 No.8",
+            "遭遇事件 No.1",
+            "遭遇事件 No.2",
+            "遭遇事件 No.3",
         ])
     )

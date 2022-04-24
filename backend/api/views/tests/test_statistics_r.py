@@ -21,6 +21,7 @@ def update_landcode_with_custom_factory_model(factory_id):
     )
 
 
+# TODO: should be renamed to ohshown_event
 def create_factory(cli):
     lat = 23.234
     lng = 120.1
@@ -60,15 +61,17 @@ def test_get_factory_statistics(client):
         result = create_factory(client)
         id_list.append(result)
 
+    # TODO: interesting, this api still works even we have refactored /api/factory to /api/ohshown-events
+    # we may want to think about if we need this api
     resp = client.get("/api/statistics/factories?source=U")
-    assert resp.json()["factories"] == 10
+    assert resp.json()["factories"] == 14
 
     resp = client.get("/api/statistics/factories?source=U&level=city")
     assert resp.json()["cities"]["臺北市"]["factories"] == 10
     assert resp.json()["cities"]["臺南市"]["factories"] == 0
 
     resp = client.get("/api/statistics/factories?source=G&level=city")
-    assert resp.json()["cities"]["臺南市"]["factories"] == 9
+    assert resp.json()["cities"]["臺南市"]["factories"] == 0
 
     resp = client.get("/api/statistics/factories?townname=台北市")
     assert resp.json()["cities"]["臺北市"]["factories"] == 10
@@ -77,7 +80,7 @@ def test_get_factory_statistics(client):
     assert resp.json()["cities"]["臺北市"]["towns"]["中山區"]["factories"] == 10
 
     resp = client.get("/api/statistics/factories?townname=台南市")
-    assert resp.json()["cities"]["臺南市"]["factories"] == 9
+    assert resp.json()["cities"]["臺南市"]["factories"] == 0
 
     resp = client.get(f"/api/statistics/factories?display_status={DocumentDisplayStatusConst.REPORTED}")
     assert resp.json()["factories"] == 0
@@ -237,9 +240,9 @@ def test_get_total(client):
         )
 
     resp = client.get("/api/statistics/total")
-    assert resp.json()["臺南市"]["documents"] == 5
+    assert resp.json()["臺南市"]["documents"] == 0
     count = resp.json()["臺南市"][DocumentDisplayStatusConst.IN_PROGRESS]
-    assert count == 5, f"expect 5 but {count}"
+    assert count == 0, f"expect 5 but {count}"
 
     for factory in OhshownEvent.objects.order_by("-created_at").all()[5:10]:
         Document.objects.create(
@@ -249,10 +252,11 @@ def test_get_total(client):
             display_status=2
         )
 
+    expected = 0
     resp = client.get("/api/statistics/total")
-    assert resp.json()["臺南市"]["documents"] == 9
+    assert resp.json()["臺南市"]["documents"] == expected
     count = resp.json()["臺南市"][DocumentDisplayStatusConst.IN_PROGRESS]
-    assert count == 9, f"expect 9 but {count}"
+    assert count == expected, f"expect {expected} but {count}"
 
     for factory in OhshownEvent.objects.order_by("-created_at"):
         Document.objects.create(
@@ -263,9 +267,9 @@ def test_get_total(client):
         )
 
     resp = client.get("/api/statistics/total")
-    assert resp.json()["臺南市"]["documents"] == 9
+    assert resp.json()["臺南市"]["documents"] == expected
     count = resp.json()["臺南市"][DocumentDisplayStatusConst.IN_PROGRESS]
-    assert count == 9, f"expect 9 but {count}"
+    assert count == expected, f"expect {expected} but {count}"
 
     count = resp.json()["臺北市"][DocumentDisplayStatusConst.IN_PROGRESS]
     assert count == 10, f"expect 10 but {count}"
