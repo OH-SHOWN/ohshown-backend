@@ -3,7 +3,7 @@ import pytest
 from ...models import OhshownEvent, Document
 from ...models.const import DocumentDisplayStatusConst
 from ...models.document import DocumentDisplayStatusEnum
-from .helper import create_factory
+from .helper import create_ohshown_event
 
 
 pytestmark = pytest.mark.django_db
@@ -13,7 +13,7 @@ def test_get_factory_statistics(client):
     # Create 10 factories in 臺北市中山區
     id_list = []
     for index in range(0, 10):
-        result, *others = create_factory(client)
+        result, *others = create_ohshown_event(client)
         id_list.append(result)
 
     # TODO: interesting, this api still works even we have refactored /api/factory to /api/ohshown-events
@@ -135,7 +135,7 @@ def test_get_factory_statistics(client):
 
 def test_get_image_statistics(client):
     for _ in range(10):
-        create_factory(client)
+        create_ohshown_event(client)
 
     resp = client.get("/api/statistics/images?townname=台北市")
     assert resp.json()["count"] == 20, f"expect 20 but {resp.json()['count']}"
@@ -152,7 +152,7 @@ def test_get_image_statistics(client):
 
 def test_get_report_records_statistics(client):
     for _ in range(10):
-        create_factory(client)
+        create_ohshown_event(client)
 
     resp = client.get("/api/statistics/report_records?townname=台北市")
     assert resp.json()["count"] == 10, f"expect 10 but {resp.json()['count']}"
@@ -173,7 +173,7 @@ def test_get_total(client):
     # see Variations session of PEP 448 https://peps.python.org/pep-0448/#variations
     id_list = []
     for index in range(0, 10):
-        result, *others = create_factory(client)
+        result, *others = create_ohshown_event(client)
         id_list.append(result)
 
     for factory_id in id_list:

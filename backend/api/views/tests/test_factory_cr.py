@@ -6,7 +6,7 @@ import pytest
 from conftest import Unordered
 
 from ...models import OhshownEvent, ReportRecord, Image
-from .helper import create_factory, LAT, LNG, OTHERS, NICKNAME, CONTACT, OHSHOWN_EVENT_TYPE, TEST_TIME
+from .helper import create_ohshown_event, LAT, LNG, OTHERS, NICKNAME, CONTACT, OHSHOWN_EVENT_TYPE, TEST_TIME
 
 
 pytestmark = pytest.mark.django_db
@@ -78,7 +78,7 @@ def test_get_nearby_factory_called_on_test_data(client):
 def test_create_new_factory_db_status_correct(client):
     im_not_related = Image.objects.create(image_path="https://i.imgur.com/T3pdEyR.jpg")
 
-    data_id, resp, request_body, im1, im2 = create_factory(client)
+    data_id, resp, request_body, im1, im2 = create_ohshown_event(client)
 
     assert resp.status_code == 200
 
@@ -108,33 +108,33 @@ def test_create_new_factory_db_status_correct(client):
 
 
 def test_create_new_factory_raise_if_image_id_not_exist(client):
-    data_id, resp, *others = create_factory(client, im2_str=str(uuid4()))
+    data_id, resp, *others = create_ohshown_event(client, im2_str=str(uuid4()))
 
     assert resp.status_code == 400
     assert resp.content == b"please check if every image id exist"
 
 
 def test_create_new_factory_allow_no_contact(client):
-    data_id, resp, *others = create_factory(client, no_contact=True)
+    data_id, resp, *others = create_ohshown_event(client, no_contact=True)
 
     assert resp.status_code == 200
 
 
 def test_create_new_factory_allow_empty_type(client):
-    data_id, resp, *others = create_factory(client, empty_type=True)
+    data_id, resp, *others = create_ohshown_event(client, empty_type=True)
 
     assert resp.status_code == 200
 
 
 def test_create_new_factory_raise_if_not_in_Taiwan(client):
-    data_id, resp, *others = create_factory(client, lat=-23.234, lng=120.1)
+    data_id, resp, *others = create_ohshown_event(client, lat=-23.234, lng=120.1)
 
     assert resp.status_code == 400
     assert "lat" in resp.json()
 
 
 def test_create_new_factory_raise_if_type_is_not_invalid(client):
-    data_id, resp, *others = create_factory(client, ohshown_event_type="aaaaa")
+    data_id, resp, *others = create_ohshown_event(client, ohshown_event_type="aaaaa")
 
     assert resp.status_code == 400
     assert "type" in resp.json()
@@ -156,7 +156,7 @@ def test_create_factory_after_delete_the_latest_factory_with_maximum_display_num
     assert OhshownEvent.objects.order_by('-display_number')[0].display_number < factory_with_max_num.display_number
 
     # Create a new factory
-    data_id, resp, *others = create_factory(client)
+    data_id, resp, *others = create_ohshown_event(client)
 
     assert resp.status_code == 200
 

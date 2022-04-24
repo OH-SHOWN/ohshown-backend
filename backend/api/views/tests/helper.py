@@ -12,9 +12,9 @@ CONTACT = "07-7533967"
 OHSHOWN_EVENT_TYPE = "2-3"
 TEST_TIME = datetime.datetime(2019, 11, 11, 11, 11, 11, tzinfo=datetime.timezone.utc)
 
-# TODO: should be renamed to ohshown_event
-def create_factory(cli, im2_str=None, no_contact=False, empty_type=False, lat=None, lng=None,
-                   ohshown_event_type=None):
+
+def create_ohshown_event(cli, im2_str=None, no_contact=False, empty_type=False, lat=None, lng=None,
+                         ohshown_event_type=None):
     if not lat:
         lat = LAT
     if not lng:
