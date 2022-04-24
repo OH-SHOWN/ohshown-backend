@@ -184,6 +184,7 @@ class OhshownEventAdmin(
     list_display = (
         "id",
         "display_number",
+        "sight_see_date_time",
         "updated_at",
         "reportrecord_latest_created_at",
         "townname",
