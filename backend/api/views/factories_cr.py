@@ -14,7 +14,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 from .utils import _get_nearby_factories, _get_client_ip
-from ..models import OhshownEvent, Image, ReportRecord
+from ..models import OhshownEvent, Image, ReportRecord, Creature
 from ..serializers import FactorySerializer
 
 LOGGER = logging.getLogger("django")
@@ -112,6 +112,25 @@ def _handle_create_ohshown_events(request):
         "display_number": num["display_number__max"] + 1,
     }
 
+    new_creatures_field = []
+    if "bearNumber" in post_body:
+        num_creature = Creature.raw_objects.aggregate(Max("display_number"))
+        # corner case when nothing in the db at the very beginning
+        if num_creature["display_number__max"] is None:
+            num_creature_max = -1
+        else:
+            num_creature_max = num_creature["display_number__max"]
+        cnt = 1
+        for creature in post_body["bears"]:
+            new_creature_field = {
+                "maturity": creature["bearType"],
+                "size": creature["bearSize"],
+                "gender": creature["bearSex"],
+                "display_number": num_creature_max + cnt,
+            }
+            new_creatures_field.append(new_creature_field)
+            cnt = cnt + 1
+
     new_report_record_field = {
         "action_type": "POST",
         "action_body": post_body,
@@ -121,6 +140,9 @@ def _handle_create_ohshown_events(request):
     }
 
     with transaction.atomic():
+        if "bearNumber" in post_body:
+            for creature_field in new_creatures_field:
+                Creature.objects.create(**creature_field)
         new_factory = OhshownEvent.objects.create(**new_factory_field)
         report_record = ReportRecord.objects.create(
             factory=new_factory,
