@@ -51,6 +51,10 @@ class Creature(SoftDeleteMixin):
         help_text="Feature description of the creature"
     )
 
+    class Meta:
+        verbose_name = "Creature"
+        verbose_name_plural = "Creatures"
+
 
 class RecycledCreature(Creature):
     class Meta:
