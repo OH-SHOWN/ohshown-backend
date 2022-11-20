@@ -3,6 +3,7 @@ import uuid
 from django.db import models
 
 from .mixins import SoftDeleteMixin
+from .ohshown_event import OhshownEvent
 
 
 class Creature(SoftDeleteMixin):
@@ -49,6 +50,11 @@ class Creature(SoftDeleteMixin):
         blank=True,
         null=True,
         help_text="Feature description of the creature"
+    )
+
+    ohshown_event = models.ForeignKey(
+        to=OhshownEvent,
+        on_delete=models.CASCADE,
     )
 
     class Meta:

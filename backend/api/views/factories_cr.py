@@ -140,10 +140,13 @@ def _handle_create_ohshown_events(request):
     }
 
     with transaction.atomic():
+        new_factory = OhshownEvent.objects.create(**new_factory_field)
         if "bearNumber" in post_body:
             for creature_field in new_creatures_field:
-                Creature.objects.create(**creature_field)
-        new_factory = OhshownEvent.objects.create(**new_factory_field)
+                Creature.objects.create(
+                    ohshown_event=new_factory,
+                    **creature_field,
+                )
         report_record = ReportRecord.objects.create(
             factory=new_factory,
             **new_report_record_field,
