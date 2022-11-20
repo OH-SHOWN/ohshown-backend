@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from api.models import (
     OhshownEvent,
+    Creature,
     Image,
     ReportRecord,
 )
@@ -10,6 +11,7 @@ from api.models.document import Document, CETNext, CETReportStatus, GovResponseS
 from api.models.image import RecycledImage
 from api.models.report_record import RecycledReportRecord
 from .ohshown_event import OhshownEventAdmin, RecycledOhshownEventAdmin
+from .creature import CreatureAdmin
 from .image import ImageAdmin, RecycledImageAdmin
 from .report_record import ReportRecordAdmin, RecycledReportRecordAdmin
 from api.admin.document import (
@@ -23,6 +25,8 @@ from api.admin.document import (
 # Register your models here.
 admin.register(OhshownEvent)(OhshownEventAdmin)
 admin.register(RecycledOhshownEvent)(RecycledOhshownEventAdmin)
+
+admin.register(Creature)(CreatureAdmin)
 
 admin.register(Image)(ImageAdmin)
 admin.register(RecycledImage)(RecycledImageAdmin)
