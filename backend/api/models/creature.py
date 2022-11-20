@@ -3,6 +3,7 @@ import uuid
 from django.db import models
 
 from .mixins import SoftDeleteMixin
+from .ohshown_event import OhshownEvent
 
 
 class Creature(SoftDeleteMixin):
@@ -50,6 +51,15 @@ class Creature(SoftDeleteMixin):
         null=True,
         help_text="Feature description of the creature"
     )
+
+    ohshown_event = models.ForeignKey(
+        to=OhshownEvent,
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        verbose_name = "Creature"
+        verbose_name_plural = "Creatures"
 
 
 class RecycledCreature(Creature):
