@@ -14,7 +14,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 from .utils import _get_nearby_factories, _get_client_ip
-from ..models import OhshownEvent, Image, ReportRecord, Creature
+from ..models import OhshownEvent, Image, ReportRecord, Creature, Reporter
 from ..serializers import FactorySerializer
 
 LOGGER = logging.getLogger("django")
@@ -139,6 +139,12 @@ def _handle_create_ohshown_events(request):
         "others": post_body.get("others", ""),
     }
 
+    new_reporter_field = {
+        "contact_name": post_body["contactName"],
+        "contact_phone": post_body["contactPhone"],
+        "contact_mail": post_body["contactMail"],
+    }
+
     with transaction.atomic():
         new_factory = OhshownEvent.objects.create(**new_factory_field)
         if "bearNumber" in post_body:
@@ -154,6 +160,7 @@ def _handle_create_ohshown_events(request):
         Image.objects.filter(id__in=image_ids).update(
             factory=new_factory, report_record=report_record
         )
+        Reporter.objects.create(**new_reporter_field)
     serializer = FactorySerializer(new_factory)
     LOGGER.info(
         f"{user_ip}: <Create new factory> at {(post_body['lng'], post_body['lat'])} "
