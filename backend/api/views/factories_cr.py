@@ -140,9 +140,9 @@ def _handle_create_ohshown_events(request):
     }
 
     new_reporter_field = {
-        "contact_name": post_body["contactName"],
-        "contact_phone": post_body["contactPhone"],
-        "contact_mail": post_body["contactMail"],
+        "contact_name": post_body.get("contactName"),
+        "contact_phone": post_body.get("contactPhone"),
+        "contact_mail": post_body.get("contactMail"),
     }
 
     with transaction.atomic():
