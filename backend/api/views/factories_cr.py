@@ -14,7 +14,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 from .utils import _get_nearby_factories, _get_client_ip
-from ..models import OhshownEvent, Image, ReportRecord, Creature, Reporter
+from ..models import OhshownEvent, Image, ReportRecord, Creature, Reporter, ShownForm
 from ..serializers import FactorySerializer
 
 LOGGER = logging.getLogger("django")
@@ -145,6 +145,28 @@ def _handle_create_ohshown_events(request):
         "contact_mail": post_body.get("contactMail"),
     }
 
+    new_shown_form_field = {
+        "ohshown_feeling": post_body.get("ohshownFeeling"),
+        "human_number": post_body.get("humanNumber"),
+        "human_behavior": post_body.get("humanBehavior"),
+        "human_behavior_text": post_body.get("humanBehaviorText"),
+        "distance": post_body.get("distance"),
+        "bear_behavior": post_body.get("bearBehavior"),
+        "bear_behavior_text": post_body.get("bearBehaviorText"),
+        "food": post_body.get("food"),
+        "food_object": post_body.get("foodText"),
+        "bear_notice": post_body.get("bearNotice"),
+        "bear_notice_minutes": post_body.get("bearNoticeMinutes"),
+        "human_reaction": post_body.get("humanReaction"),
+        "human_reaction_text": post_body.get("humanReactionText"),
+        "bear_reaction": post_body.get("bearReaction"),
+        "bear_reaction_text": post_body.get("bearReactionText"),
+        "human_hurt": post_body.get("humanHurt"),
+        "human_hurt_text": post_body.get("humanHurtDescription"),
+    }
+
+    print(new_shown_form_field)
+
     with transaction.atomic():
         new_factory = OhshownEvent.objects.create(**new_factory_field)
         if "bearNumber" in post_body:
@@ -161,6 +183,9 @@ def _handle_create_ohshown_events(request):
             factory=new_factory, report_record=report_record
         )
         Reporter.objects.create(**new_reporter_field)
+        if post_body.get("type") == '2-1':
+            ShownForm.objects.create(**new_shown_form_field)
+
     serializer = FactorySerializer(new_factory)
     LOGGER.info(
         f"{user_ip}: <Create new factory> at {(post_body['lng'], post_body['lat'])} "
