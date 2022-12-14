@@ -183,7 +183,7 @@ def _handle_create_ohshown_events(request):
             factory=new_factory, report_record=report_record
         )
         Reporter.objects.create(**new_reporter_field)
-        if post_body["type"] == '2-1':
+        if post_body.get("type") == '2-1':
             ShownForm.objects.create(**new_shown_form_field)
 
     serializer = FactorySerializer(new_factory)
