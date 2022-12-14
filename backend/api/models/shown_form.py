@@ -125,7 +125,10 @@ class ShownForm(SoftDeleteMixin):
             help_text='黑熊在吃什麼'
         )
     )
-    food_object = JSONField() 
+    food_object = JSONField(
+        blank=True, 
+        null=True,
+    ) 
     bear_notice = models.IntegerField(
         blank=True, 
         null=True, 
@@ -166,7 +169,8 @@ class ShownForm(SoftDeleteMixin):
         help_text='黑熊發現目擊者後，黑熊的反應-文字補充'
     )
     human_hurt = models.BooleanField(
-        default=False,
+        blank=True, 
+        null=True, 
         help_text='是否有人受傷或意外發生'
     )
     human_hurt_text = models.CharField(
