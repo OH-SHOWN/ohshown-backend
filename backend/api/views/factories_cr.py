@@ -102,13 +102,12 @@ def _handle_create_ohshown_events(request):
 
     sight_see_timestamp_to_datetime = post_body["datetime"] / 1e3
 
-    new_factory_field = {
+    new_ohshown_event_field = {
         "name": post_body["name"],
         "lat": post_body["lat"],
         "lng": post_body["lng"],
         "sight_see_date_time": datetime.datetime.fromtimestamp(sight_see_timestamp_to_datetime),
         "ohshown_event_type": post_body.get("type"),
-        "status_time": datetime.datetime.now(),
         "display_number": num["display_number__max"] + 1,
     }
 
@@ -168,7 +167,7 @@ def _handle_create_ohshown_events(request):
     print(new_shown_form_field)
 
     with transaction.atomic():
-        new_factory = OhshownEvent.objects.create(**new_factory_field)
+        new_factory = OhshownEvent.objects.create(**new_ohshown_event_field)
         if "bearNumber" in post_body:
             for creature_field in new_creatures_field:
                 Creature.objects.create(
