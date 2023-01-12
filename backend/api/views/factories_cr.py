@@ -171,30 +171,30 @@ def _handle_create_ohshown_events(request):
     print(new_shown_form_field)
 
     with transaction.atomic():
-        new_factory = OhshownEvent.objects.create(**new_ohshown_event_field)
+        new_ohshown_event = OhshownEvent.objects.create(**new_ohshown_event_field)
         if "bearNumber" in post_body:
             for creature_field in new_creatures_field:
                 Creature.objects.create(
-                    ohshown_event=new_factory,
+                    ohshown_event=new_ohshown_event,
                     **creature_field,
                 )
         report_record = ReportRecord.objects.create(
-            factory=new_factory,
+            factory=new_ohshown_event,
             **new_report_record_field,
         )
         Image.objects.filter(id__in=image_ids).update(
-            factory=new_factory, report_record=report_record
+            factory=new_ohshown_event, report_record=report_record
         )
         Reporter.objects.create(**new_reporter_field)
         if post_body.get("type") == '2-1':
             ShownForm.objects.create(**new_shown_form_field)
 
-    serializer = FactorySerializer(new_factory)
+    serializer = FactorySerializer(new_ohshown_event)
     LOGGER.info(
         f"{user_ip}: <Create new factory> at {(post_body['lng'], post_body['lat'])} "
-        f"id:{new_factory.id} {new_ohshown_event_field['name']} {new_ohshown_event_field['ohshown_event_type']}",
+        f"id:{new_ohshown_event.id} {new_ohshown_event_field['name']} {new_ohshown_event_field['ohshown_event_type']}",
     )
-    async_task("api.tasks.update_landcode", new_factory.id)
+    async_task("api.tasks.update_landcode", new_ohshown_event.id)
     return JsonResponse(serializer.data, safe=False)
 
 
