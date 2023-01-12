@@ -2,6 +2,7 @@ import uuid
 
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.contrib.postgres.fields import ArrayField
 
 from .mixins import SoftDeleteMixin
 
@@ -58,6 +59,49 @@ class OhshownEvent(SoftDeleteMixin):
         ("C", "不明物種移入"),
     ]
 
+    ground_type_list = [
+      (0, "森林(天然林)"),
+      (1, "森林(人工林)"),
+      (2, "森林(次生林)"),
+      (3, "溪流或河床"),
+      (4, "住宅房舍附近"),
+      (5, "遊憩區(包括山屋 / 營地週遭)"),
+      (6, "道路(步道)"),
+      (7, "道路(馬路)"),
+      (8, "道路(林道)"),
+      (9, "道路(產業道路)"),
+      (10, "農牧用地(果園)"),
+      (11, "農牧用地(菜園)"),
+      (12, "農牧用地(休耕地)"),
+      (13, "農牧用地(養蜂場)"),
+      (14, "農牧用地(禽舍)"),
+      (15, "農牧用地(豬舍)"),
+      (16, "農牧用地(工寮或倉庫)"),
+      (17, "其他"),
+    ];
+    vegetation_list = [
+      (0, "闊葉林"),
+      (1, "針葉林"),
+      (2, "混合林"),
+      (3, "灌叢"),
+      (4, "草原"),
+      (5, "竹林/箭竹林"),
+      (6, "裸露地"),
+      (7, "其他"),
+    ];
+    bear_attractor_list = [
+      (0, "無"),
+      (1, "自然食物資源"),
+      (2, "動物屍體"),
+      (3, "農作物"),
+      (4, "家禽/畜"),
+      (5, "蜂蜜"),
+      (6, "垃圾/廚餘"),
+      (7, "動物飼料"),
+      (8, "人類食物"),
+      (9, "其他"),
+    ];
+
     # All Features
     id = models.UUIDField(
         primary_key=True,
@@ -82,6 +126,37 @@ class OhshownEvent(SoftDeleteMixin):
         blank=True,
         null=True,
     )
+    ground_type = ArrayField(
+        models.IntegerField(
+            blank=True, 
+            null=True, 
+            choices=ground_type_list, 
+            help_text='土地類型'
+        ),
+        blank=True, 
+        null=True, 
+    )
+    vegetation = ArrayField(
+        models.IntegerField(
+            blank=True, 
+            null=True, 
+            choices=vegetation_list, 
+            help_text='植被'
+        ),
+        blank=True, 
+        null=True, 
+    )
+    bear_attractor = ArrayField(
+        models.IntegerField(
+            blank=True, 
+            null=True, 
+            choices=bear_attractor_list, 
+            help_text='附近可能吸引熊接近的物品'
+        ),
+        blank=True, 
+        null=True, 
+    )
+
     before_release = models.BooleanField(
         default=False
     )  # 從 full-info.csv 匯入的那些都是 True ，使用者新增的通通是 False

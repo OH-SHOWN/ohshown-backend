@@ -102,7 +102,7 @@ def _handle_create_ohshown_events(request):
 
     sight_see_timestamp_to_datetime = post_body["datetime"] / 1e3
 
-    new_factory_field = {
+    new_ohshown_event_field = {
         "name": post_body["name"],
         "lat": post_body["lat"],
         "lng": post_body["lng"],
@@ -110,6 +110,9 @@ def _handle_create_ohshown_events(request):
         "ohshown_event_type": post_body.get("type"),
         "status_time": datetime.datetime.now(),
         "display_number": num["display_number__max"] + 1,
+        "ground_type": post_body.get("groundTypes"),
+        "vegetation": post_body.get("vegetations"),
+        "bear_attractor": post_body.get("bearAttractors"),
     }
 
     new_creatures_field = []
@@ -168,7 +171,7 @@ def _handle_create_ohshown_events(request):
     print(new_shown_form_field)
 
     with transaction.atomic():
-        new_factory = OhshownEvent.objects.create(**new_factory_field)
+        new_factory = OhshownEvent.objects.create(**new_ohshown_event_field)
         if "bearNumber" in post_body:
             for creature_field in new_creatures_field:
                 Creature.objects.create(
@@ -189,7 +192,7 @@ def _handle_create_ohshown_events(request):
     serializer = FactorySerializer(new_factory)
     LOGGER.info(
         f"{user_ip}: <Create new factory> at {(post_body['lng'], post_body['lat'])} "
-        f"id:{new_factory.id} {new_factory_field['name']} {new_factory_field['ohshown_event_type']}",
+        f"id:{new_factory.id} {new_ohshown_event_field['name']} {new_ohshown_event_field['ohshown_event_type']}",
     )
     async_task("api.tasks.update_landcode", new_factory.id)
     return JsonResponse(serializer.data, safe=False)
