@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 
 from .mixins import SoftDeleteMixin
-from ..utils import translate_array_of_integer
+from ..utils import format_multiple_choice_options
 
 CustomUser = get_user_model()
 
@@ -208,11 +208,11 @@ class OhshownEvent(SoftDeleteMixin):
     updated_at = models.DateTimeField(auto_now=True)
 
     def translated_ground_type(self):
-        return translate_array_of_integer(dict(self.ground_type_list), self.ground_type)
+        return format_multiple_choice_options(dict(self.ground_type_list), self.ground_type)
     def translated_vegetation(self):
-        return translate_array_of_integer(dict(self.vegetation_list), self.vegetation)
+        return format_multiple_choice_options(dict(self.vegetation_list), self.vegetation)
     def translated_bear_attractor(self):
-        return translate_array_of_integer(dict(self.bear_attractor_list), self.bear_attractor)
+        return format_multiple_choice_options(dict(self.bear_attractor_list), self.bear_attractor)
 
     class Meta:
         verbose_name = "Ohshown Event"

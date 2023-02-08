@@ -11,7 +11,7 @@ def set_function_attributes(**kwargs):
 def normalize_townname(townname):
     return townname.replace("台", "臺")
 
-def translate_array_of_integer(translate_dict, array_of_integer, text_object = {}): 
+def format_multiple_choice_options(translate_dict, array_of_integer, text_object = {}): 
     if isinstance(array_of_integer, list):
         return ", ".join("%s %s" % (translate_dict.get(item, str(item)), "(%s)" % text_object.get(str(item)) if str(item) in text_object else "") for item in array_of_integer)
     return ""
