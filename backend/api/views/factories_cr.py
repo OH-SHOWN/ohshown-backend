@@ -14,7 +14,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 from .utils import _get_nearby_factories, _get_client_ip
-from ..models import OhshownEvent, Image, ReportRecord, Creature, Reporter, ShownForm
+from ..models import OhshownEvent, Image, ReportRecord, Creature, Reporter, ShownForm, TraceForm
 from ..serializers import FactorySerializer
 
 LOGGER = logging.getLogger("django")
@@ -152,23 +152,30 @@ def _handle_create_ohshown_events(request):
         "ohshown_feeling": post_body.get("ohshownFeeling"),
         "human_number": post_body.get("humanNumber"),
         "human_behavior": post_body.get("humanBehavior"),
-        "human_behavior_text": post_body.get("humanBehaviorText"),
+        "human_behavior_text_object": post_body.get("humanBehaviorTextObject"),
         "distance": post_body.get("distance"),
         "bear_behavior": post_body.get("bearBehavior"),
-        "bear_behavior_text": post_body.get("bearBehaviorText"),
+        "bear_behavior_text_object": post_body.get("bearBehaviorTextObject"),
         "food": post_body.get("food"),
-        "food_object": post_body.get("foodText"),
+        "food_text_object": post_body.get("foodTextObject"),
         "bear_notice": post_body.get("bearNotice"),
         "bear_notice_minutes": post_body.get("bearNoticeMinutes"),
         "human_reaction": post_body.get("humanReaction"),
-        "human_reaction_text": post_body.get("humanReactionText"),
+        "human_reaction_text_object": post_body.get("humanReactionTextObject"),
         "bear_reaction": post_body.get("bearReaction"),
-        "bear_reaction_text": post_body.get("bearReactionText"),
+        "bear_reaction_text_object": post_body.get("bearReactionTextObject"),
         "human_hurt": post_body.get("humanHurt"),
         "human_hurt_text": post_body.get("humanHurtDescription"),
     }
 
-    print(new_shown_form_field)
+    new_trace_form_field = {
+        "trace_type": post_body.get("traceType"),
+        "trace_type_text_object": post_body.get("traceTypeTextObject"),
+        "age_type": post_body.get("ageType"),
+        "age_number": post_body.get("ageNumber"),
+        "image_available": post_body.get("imageAvailable"),
+        "other_info": post_body.get("otherInfo"),
+    }
 
     with transaction.atomic():
         new_ohshown_event = OhshownEvent.objects.create(**new_ohshown_event_field)
@@ -188,6 +195,8 @@ def _handle_create_ohshown_events(request):
         Reporter.objects.create(**new_reporter_field)
         if post_body.get("type") == '2-1':
             ShownForm.objects.create(**new_shown_form_field)
+        elif post_body.get("type") == '2-2':
+            TraceForm.objects.create(**new_trace_form_field)
 
     serializer = FactorySerializer(new_ohshown_event)
     LOGGER.info(

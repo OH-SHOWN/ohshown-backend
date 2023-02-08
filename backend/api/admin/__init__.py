@@ -7,6 +7,7 @@ from api.models import (
     ReportRecord,
     Reporter,
     ShownForm,
+    TraceForm,
 )
 from api.models.ohshown_event import RecycledOhshownEvent
 from api.models.document import Document, CETNext, CETReportStatus, GovResponseStatus, FollowUp
@@ -16,6 +17,7 @@ from .ohshown_event import OhshownEventAdmin, RecycledOhshownEventAdmin
 from .creature import CreatureAdmin
 from .reporter import ReporterAdmin
 from .shown_form import ShownFormAdmin
+from .trace_form import TraceFormAdmin
 from .image import ImageAdmin, RecycledImageAdmin
 from .report_record import ReportRecordAdmin, RecycledReportRecordAdmin
 from api.admin.document import (
@@ -33,6 +35,7 @@ admin.register(RecycledOhshownEvent)(RecycledOhshownEventAdmin)
 admin.register(Creature)(CreatureAdmin)
 admin.register(Reporter)(ReporterAdmin)
 admin.register(ShownForm)(ShownFormAdmin)
+admin.register(TraceForm)(TraceFormAdmin)
 
 admin.register(Image)(ImageAdmin)
 admin.register(RecycledImage)(RecycledImageAdmin)
