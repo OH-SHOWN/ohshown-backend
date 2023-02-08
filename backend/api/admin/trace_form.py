@@ -34,7 +34,7 @@ class TraceFormAdmin(
                     "trace_type",
                     "trace_type_text_object",
                     "age_type",
-                    "age_days",
+                    "age_number",
                     "image_available",
                     "other_info",
                 ),

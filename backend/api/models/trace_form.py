@@ -37,7 +37,7 @@ class TraceForm(SoftDeleteMixin):
         choices=age_type_list,  
         help_text='痕跡新舊類型'
     )
-    age_days = models.IntegerField(
+    age_number = models.IntegerField(
         blank=True, 
         null=True, 
         help_text='痕跡出現時間估計/日'
@@ -58,8 +58,8 @@ class TraceForm(SoftDeleteMixin):
 
     def formatted_age(self):
         if self.age_type == 0:
-            return "%s，約 %d 天" % (dict(self.age_type_list).get(self.age_type), self.age_days)
+            return "%s，約 %d 天" % (dict(self.age_type_list).get(self.age_type), self.age_number)
         elif self.age_type == 1:
-            return "%s，約 %d 個月" % (dict(self.age_type_list).get(self.age_type), self.age_days)
+            return "%s，約 %d 個月" % (dict(self.age_type_list).get(self.age_type), self.age_number)
         else:
             return dict(self.age_type_list).get(self.age_type)

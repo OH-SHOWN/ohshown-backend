@@ -172,7 +172,7 @@ def _handle_create_ohshown_events(request):
         "trace_type": post_body.get("traceType"),
         "trace_type_text_object": post_body.get("traceTypeTextObject"),
         "age_type": post_body.get("ageType"),
-        "age_days": post_body.get("ageDays"),
+        "age_number": post_body.get("ageNumber"),
         "image_available": post_body.get("imageAvailable"),
         "other_info": post_body.get("otherInfo"),
     }
