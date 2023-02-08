@@ -3,6 +3,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.fields import JSONField
 
 from .mixins import SoftDeleteMixin
+from ..utils import translate_array_of_integer
 
 
 class ShownForm(SoftDeleteMixin):
@@ -93,10 +94,9 @@ class ShownForm(SoftDeleteMixin):
         choices=human_behavior_list, 
         help_text='目擊當下目擊者在做什麼'
     )
-    human_behavior_text = models.CharField(
+    human_behavior_text_object = JSONField(
         blank=True, 
         null=True, 
-        max_length=255, 
         help_text='目擊當下目擊者在做什麼-文字補充'
     )
     distance = models.IntegerField(
@@ -111,10 +111,9 @@ class ShownForm(SoftDeleteMixin):
         choices=bear_behavior_list, 
         help_text='目擊當下熊在做什麼'
     )
-    bear_behavior_text = models.CharField(
+    bear_behavior_text_object = JSONField(
         blank=True, 
         null=True, 
-        max_length=255, 
         help_text='目擊當下熊在做什麼-文字補充'
     )
     food = ArrayField(
@@ -125,9 +124,10 @@ class ShownForm(SoftDeleteMixin):
             help_text='黑熊在吃什麼'
         )
     )
-    food_object = JSONField(
+    food_text_object = JSONField(
         blank=True, 
         null=True,
+        help_text='黑熊在吃什麼-文字補充'
     ) 
     bear_notice = models.IntegerField(
         blank=True, 
@@ -148,10 +148,9 @@ class ShownForm(SoftDeleteMixin):
             help_text='目擊黑熊後，目擊者反應'
         )
     )
-    human_reaction_text = models.CharField(
+    human_reaction_text_object = JSONField(
         blank=True, 
         null=True, 
-        max_length=255, 
         help_text='目擊黑熊後，目擊者反應-文字補充'
     )
     bear_reaction = ArrayField(
@@ -162,10 +161,9 @@ class ShownForm(SoftDeleteMixin):
             help_text='黑熊發現目擊者後，黑熊的反應'
         )
     )
-    bear_reaction_text = models.CharField(
+    bear_reaction_text_object = JSONField(
         blank=True, 
         null=True, 
-        max_length=255, 
         help_text='黑熊發現目擊者後，黑熊的反應-文字補充'
     )
     human_hurt = models.BooleanField(
@@ -179,3 +177,14 @@ class ShownForm(SoftDeleteMixin):
         max_length=255, 
         help_text='是否有人受傷或意外發生-文字補充'
     )
+
+    def formatted_food(self):
+        return translate_array_of_integer(dict(self.food_list), self.food, self.food_text_object)
+    def formatted_human_behavior(self):
+        return translate_array_of_integer(dict(self.human_behavior_list), self.human_behavior, self.human_behavior_text_object)
+    def formatted_human_reaction(self):
+        return translate_array_of_integer(dict(self.human_reaction_list), self.human_reaction, self.human_reaction_text_object)
+    def formatted_bear_reaction(self):
+        return translate_array_of_integer(dict(self.bear_reaction_list), self.bear_reaction, self.bear_reaction_text_object)
+    def formatted_bear_behavior(self):
+        return translate_array_of_integer(dict(self.bear_behavior_list), self.bear_behavior, self.bear_behavior_text_object)
