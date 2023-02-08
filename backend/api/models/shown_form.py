@@ -3,7 +3,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.fields import JSONField
 
 from .mixins import SoftDeleteMixin
-from ..utils import format_multiple_choice_options
+from ..utils import format_multiple_choice_options, format_single_choice_options
 
 
 class ShownForm(SoftDeleteMixin):
@@ -181,10 +181,14 @@ class ShownForm(SoftDeleteMixin):
     def formatted_food(self):
         return format_multiple_choice_options(dict(self.food_list), self.food, self.food_text_object)
     def formatted_human_behavior(self):
-        return format_multiple_choice_options(dict(self.human_behavior_list), self.human_behavior, self.human_behavior_text_object)
+        return format_single_choice_options(dict(self.human_behavior_list), self.human_behavior, self.human_behavior_text_object)
     def formatted_human_reaction(self):
         return format_multiple_choice_options(dict(self.human_reaction_list), self.human_reaction, self.human_reaction_text_object)
+    def formatted_bear_behavior(self):
+        return format_single_choice_options(dict(self.bear_behavior_list), self.bear_behavior, self.bear_behavior_text_object)
     def formatted_bear_reaction(self):
         return format_multiple_choice_options(dict(self.bear_reaction_list), self.bear_reaction, self.bear_reaction_text_object)
-    def formatted_bear_behavior(self):
-        return format_multiple_choice_options(dict(self.bear_behavior_list), self.bear_behavior, self.bear_behavior_text_object)
+    def formatted_bear_notice(self):
+        if self.bear_notice == 2:
+            return dict(self.bear_notice_list).get(2).replace('X', str(self.bear_notice_minutes))
+        return dict(self.bear_notice_list).get(self.bear_notice)
