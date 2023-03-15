@@ -10,7 +10,7 @@ from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
 from django.utils.html import format_html
 
-from api.models import ReportRecord, Image
+from api.models import ReportRecord, Image, ShownForm, TraceForm, Creature
 from api.admin.actions import (
     ExportCsvMixin,
     RestoreMixin,
@@ -174,6 +174,18 @@ class ImageInlineForOhshownEvent(admin.TabularInline):
     def image_show(self, obj):
         return mark_safe(f'<img src="{obj.image_path}" style="max-width:500px; height:auto"/>')
 
+class ShownFormInline(admin.TabularInline):
+    model = ShownForm
+    extra = 0
+
+class TraceFormInline(admin.TabularInline):
+    model = TraceForm
+    extra = 0
+
+class CreatureInline(admin.TabularInline):
+    model = Creature
+    extra = 0
+
 
 class OhshownEventAdmin(
     ImportExportModelAdmin,
@@ -260,7 +272,7 @@ class OhshownEventAdmin(
         ),
     )
 
-    inlines = [DescriptionInline, ImageInlineForOhshownEvent, ReportRecordInline, DocumentInline]
+    inlines = [ShownFormInline, TraceFormInline, CreatureInline, DescriptionInline, ImageInlineForOhshownEvent, ReportRecordInline, DocumentInline]
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
