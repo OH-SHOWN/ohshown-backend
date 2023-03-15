@@ -4,7 +4,7 @@ from django.contrib.postgres.fields import JSONField
 
 from .mixins import SoftDeleteMixin
 from ..utils import format_multiple_choice_options, format_single_choice_options
-
+from .ohshown_event import OhshownEvent
 
 class ShownForm(SoftDeleteMixin):
 
@@ -176,6 +176,10 @@ class ShownForm(SoftDeleteMixin):
         null=True, 
         max_length=255, 
         help_text='是否有人受傷或意外發生-文字補充'
+    )
+    ohshown_event = models.ForeignKey(
+        to=OhshownEvent,
+        on_delete=models.CASCADE,
     )
 
     def formatted_food(self):

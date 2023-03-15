@@ -3,7 +3,7 @@ from django.contrib.postgres.fields import JSONField
 
 from .mixins import SoftDeleteMixin
 from ..utils import format_single_choice_options
-
+from .ohshown_event import OhshownEvent
 
 class TraceForm(SoftDeleteMixin):
     trace_type_list = [
@@ -51,6 +51,10 @@ class TraceForm(SoftDeleteMixin):
         blank=True, 
         null=True, 
         help_text='其他補充資訊'
+    )
+    ohshown_event = models.ForeignKey(
+        to=OhshownEvent,
+        on_delete=models.CASCADE,
     )
 
     def formatted_trace_type(self):

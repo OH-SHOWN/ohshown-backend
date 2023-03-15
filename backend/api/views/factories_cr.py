@@ -198,11 +198,20 @@ def _handle_create_ohshown_events(request):
         Image.objects.filter(id__in=image_ids).update(
             factory=new_ohshown_event, report_record=report_record
         )
-        Reporter.objects.create(**new_reporter_field)
+        Reporter.objects.create(
+            ohshown_event=new_ohshown_event,
+            **new_reporter_field
+        )
         if post_body.get("type") == '2-1':
-            ShownForm.objects.create(**new_shown_form_field)
+            ShownForm.objects.create(
+                ohshown_event=new_ohshown_event,
+                **new_shown_form_field
+            )
         elif post_body.get("type") == '2-2':
-            TraceForm.objects.create(**new_trace_form_field)
+            TraceForm.objects.create(
+                ohshown_event=new_ohshown_event,
+                **new_trace_form_field
+            )
 
     serializer = FactorySerializer(new_ohshown_event)
     LOGGER.info(
