@@ -131,9 +131,9 @@ def _handle_create_ohshown_events(request):
         cnt = 1
         for creature in post_body["bears"]:
             new_creature_field = {
-                "maturity": creature["bearType"],
-                "size": creature["bearSize"],
-                "gender": creature["bearSex"],
+                "maturity": creature.get("bearType"),
+                "size": creature.get("bearSize"),
+                "gender": creature.get("bearSex"),
                 "display_number": num_creature_max + cnt,
             }
             new_creatures_field.append(new_creature_field)

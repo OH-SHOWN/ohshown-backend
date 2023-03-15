@@ -34,14 +34,20 @@ class Creature(SoftDeleteMixin):
         (6, "unknown"),
     ]
     gender = models.IntegerField(
+        blank=True,
+        null=True,
         choices=gender_list,
         help_text="Gender of the creature"
     )
     maturity = models.IntegerField(
+        blank=True,
+        null=True,
         choices=maturity_list,
         help_text="Maturity of the creature"
     )
     size = models.IntegerField(
+        blank=True,
+        null=True,
         choices=size_list,
         help_text="Size of the creature"
     )
