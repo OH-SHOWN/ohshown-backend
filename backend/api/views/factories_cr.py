@@ -178,9 +178,10 @@ def _handle_create_ohshown_events(request):
         "trace_type_text_object": post_body.get("traceTypeTextObject"),
         "age_type": post_body.get("ageType"),
         "age_number": post_body.get("ageNumber"),
-        "image_available": post_body.get("imageAvailable"),
         "other_info": post_body.get("otherInfo"),
     }
+    if post_body.get("imageAvailable"):
+        new_trace_form_field.image_available = post_body.imageAvailable 
 
     with transaction.atomic():
         new_ohshown_event = OhshownEvent.objects.create(**new_ohshown_event_field)
