@@ -113,6 +113,11 @@ def _handle_create_ohshown_events(request):
         "ground_type": post_body.get("groundTypes"),
         "vegetation": post_body.get("vegetations"),
         "bear_attractor": post_body.get("bearAttractors"),
+        "ohshown_again": post_body.get("ohshownAgain"),
+        "ohshown_again_reason": post_body.get("ohshownAgainReason"),
+        "prevent_ohshown_methods": post_body.get("preventOhshownMethods"),
+        "prevent_ohshown_methods_text_object": post_body.get("preventOhshownMethodsTextObject"),
+        "survey_if_bear_exist": post_body.get("surveyIfBearExist"),
     }
 
     new_creatures_field = []
