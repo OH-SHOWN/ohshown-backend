@@ -55,6 +55,7 @@ class TraceForm(SoftDeleteMixin):
     ohshown_event = models.ForeignKey(
         to=OhshownEvent,
         on_delete=models.CASCADE,
+        related_name="trace_form"
     )
 
     def formatted_trace_type(self):

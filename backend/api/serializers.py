@@ -9,7 +9,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-from .models import OhshownEvent, Image, ReportRecord, FollowUp, Creature
+from .models import OhshownEvent, Image, ReportRecord, FollowUp, Creature, ShownForm, TraceForm, Reporter
 
 
 VALID_OHSHOWN_EVENT_TYPES = [t[0] for t in OhshownEvent.ohshown_event_type_list]
@@ -41,6 +41,43 @@ class CreatureSerializer(ModelSerializer):
             "size",
             "misc_feature_description",
         ]
+class ShownFormSerializer(ModelSerializer):
+    class Meta:
+        model = ShownForm
+        fields = [
+            "id",   
+            "ohshown_feeling",
+            "human_number",
+            "formatted_human_behavior",
+            "distance",
+            "formatted_bear_behavior",
+            "formatted_food",
+            "formatted_bear_notice",
+            "formatted_human_reaction",
+            "formatted_bear_reaction",
+            "human_hurt",
+            "human_hurt_text",
+        ]
+class TraceFormSerializer(ModelSerializer):
+    class Meta:
+        model = TraceForm
+        fields = [
+            "id",   
+            "formatted_trace_type",
+            "formatted_age",
+            "image_available",
+            "other_info",
+        ]
+class ReporterSerializer(ModelSerializer):
+    class Meta:
+        model = Reporter
+        fields = [
+            "id",
+            "contact_name",
+            "contact_phone",
+            "contact_mail",
+        ]
+
 
 class FactorySerializer(ModelSerializer):
 
@@ -52,6 +89,9 @@ class FactorySerializer(ModelSerializer):
     document_display_status = SerializerMethodField()
     follow_ups_for_user = SerializerMethodField()
     creatures = CreatureSerializer(many=True, read_only=True)
+    trace_form = TraceFormSerializer(many=True, read_only=True)
+    shown_form = ShownFormSerializer(many=True, read_only=True)
+    reporters = ReporterSerializer(many=True, read_only=True)
     class Meta:
         model = OhshownEvent
         fields = [
@@ -84,12 +124,18 @@ class FactorySerializer(ModelSerializer):
             "formated_ohshown_again",
             "formated_prevent_ohshown_methods",
             "survey_if_bear_exist",
-            "creatures"
+            "creatures",
+            "shown_form",
+            "trace_form",
+            "reporters",
         ]
         extra_kwargs = {
             "display_number": {"required": False},
             "creatures": {"required": False},
             "sight_see_date_time": {"required": False},
+            "shown_form": {"required": False},
+            "trace_form": {"required": False},
+            "reporters": {"required": False},
         }
 
     def get_status(self, obj):

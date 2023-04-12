@@ -180,6 +180,7 @@ class ShownForm(SoftDeleteMixin):
     ohshown_event = models.ForeignKey(
         to=OhshownEvent,
         on_delete=models.CASCADE,
+        related_name="shown_form"
     )
 
     def formatted_food(self):
