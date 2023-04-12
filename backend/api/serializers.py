@@ -9,7 +9,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-from .models import OhshownEvent, Image, ReportRecord, FollowUp
+from .models import OhshownEvent, Image, ReportRecord, FollowUp, Creature
 
 
 VALID_OHSHOWN_EVENT_TYPES = [t[0] for t in OhshownEvent.ohshown_event_type_list]
@@ -30,6 +30,17 @@ class ImageSerializer(ModelSerializer):
         model = Image
         fields = ["id", "image_path", "url"]
 
+class CreatureSerializer(ModelSerializer):
+    class Meta:
+        model = Creature
+        fields = [
+            "id",
+            "display_number",
+            "gender",
+            "maturity",
+            "size",
+            "misc_feature_description",
+        ]
 
 class FactorySerializer(ModelSerializer):
 
@@ -40,7 +51,7 @@ class FactorySerializer(ModelSerializer):
     status = SerializerMethodField()  # should be DEPRECATED
     document_display_status = SerializerMethodField()
     follow_ups_for_user = SerializerMethodField()
-
+    creatures = CreatureSerializer(many=True, read_only=True)
     class Meta:
         model = OhshownEvent
         fields = [
@@ -63,10 +74,22 @@ class FactorySerializer(ModelSerializer):
             "data_complete",
             "status",  # should be DEPRECATED
             "document_display_status",
-            "follow_ups_for_user"
+            "follow_ups_for_user",
+            "sight_see_date_time",
+            "lat",
+            "lng",
+            "formated_ground_type",
+            "formated_vegetation",
+            "formated_bear_attractor",
+            "formated_ohshown_again",
+            "formated_prevent_ohshown_methods",
+            "survey_if_bear_exist",
+            "creatures"
         ]
         extra_kwargs = {
             "display_number": {"required": False},
+            "creatures": {"required": False},
+            "sight_see_date_time": {"required": False},
         }
 
     def get_status(self, obj):
@@ -136,3 +159,4 @@ class ReportRecordSerializer(ModelSerializer):
             "created_at",
             "others",
         ]
+

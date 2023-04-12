@@ -111,7 +111,7 @@ class OhshownEvent(SoftDeleteMixin):
     ]
 
     prevent_ohshown_methods_list = [
-        (0, "盡量結伴同行無"),
+        (0, "盡量結伴同行"),
         (1, "輕聲走路"),
         (2, "必要時，沿途製造些聲響，如吹口哨、講話"),
         (3, "避免走夜路"),

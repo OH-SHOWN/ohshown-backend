@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db.models import Prefetch
 from django.db.models.functions.math import Radians, Cos, ACos, Sin
 
-from ..models import OhshownEvent, ReportRecord, Image, Document
+from ..models import OhshownEvent, ReportRecord, Image, Document, Creature
 
 
 def _sample(objs, k):
@@ -44,6 +44,7 @@ def _get_nearby_factories(latitude, longitude, radius):
                 "documents", queryset=Document.objects.only("created_at", "display_status").all()
             )
         )
+        .prefetch_related(Prefetch("creatures", queryset=Creature.objects.all()))
         .all()
     )
 
