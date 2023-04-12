@@ -113,6 +113,11 @@ def _handle_create_ohshown_events(request):
         "ground_type": post_body.get("groundTypes"),
         "vegetation": post_body.get("vegetations"),
         "bear_attractor": post_body.get("bearAttractors"),
+        "ohshown_again": post_body.get("ohshownAgain"),
+        "ohshown_again_reason": post_body.get("ohshownAgainReason"),
+        "prevent_ohshown_methods": post_body.get("preventOhshownMethods"),
+        "prevent_ohshown_methods_text_object": post_body.get("preventOhshownMethodsTextObject"),
+        "survey_if_bear_exist": post_body.get("surveyIfBearExist"),
     }
 
     new_creatures_field = []
@@ -126,9 +131,9 @@ def _handle_create_ohshown_events(request):
         cnt = 1
         for creature in post_body["bears"]:
             new_creature_field = {
-                "maturity": creature["bearType"],
-                "size": creature["bearSize"],
-                "gender": creature["bearSex"],
+                "maturity": creature.get("bearType"),
+                "size": creature.get("bearSize"),
+                "gender": creature.get("bearSex"),
                 "display_number": num_creature_max + cnt,
             }
             new_creatures_field.append(new_creature_field)
@@ -173,9 +178,10 @@ def _handle_create_ohshown_events(request):
         "trace_type_text_object": post_body.get("traceTypeTextObject"),
         "age_type": post_body.get("ageType"),
         "age_number": post_body.get("ageNumber"),
-        "image_available": post_body.get("imageAvailable"),
         "other_info": post_body.get("otherInfo"),
     }
+    if post_body.get("imageAvailable"):
+        new_trace_form_field.image_available = post_body.imageAvailable 
 
     with transaction.atomic():
         new_ohshown_event = OhshownEvent.objects.create(**new_ohshown_event_field)
@@ -192,11 +198,20 @@ def _handle_create_ohshown_events(request):
         Image.objects.filter(id__in=image_ids).update(
             factory=new_ohshown_event, report_record=report_record
         )
-        Reporter.objects.create(**new_reporter_field)
+        Reporter.objects.create(
+            ohshown_event=new_ohshown_event,
+            **new_reporter_field
+        )
         if post_body.get("type") == '2-1':
-            ShownForm.objects.create(**new_shown_form_field)
+            ShownForm.objects.create(
+                ohshown_event=new_ohshown_event,
+                **new_shown_form_field
+            )
         elif post_body.get("type") == '2-2':
-            TraceForm.objects.create(**new_trace_form_field)
+            TraceForm.objects.create(
+                ohshown_event=new_ohshown_event,
+                **new_trace_form_field
+            )
 
     serializer = FactorySerializer(new_ohshown_event)
     LOGGER.info(

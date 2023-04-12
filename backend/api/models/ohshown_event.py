@@ -3,6 +3,7 @@ import uuid
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import JSONField
 
 from .mixins import SoftDeleteMixin
 from ..utils import format_multiple_choice_options
@@ -103,6 +104,25 @@ class OhshownEvent(SoftDeleteMixin):
       (9, "其他"),
     ];
 
+    ohshown_again_list = [
+        (0, "是"),
+        (1, "否"),
+        (2, "沒意見"),
+    ]
+
+    prevent_ohshown_methods_list = [
+        (0, "盡量結伴同行"),
+        (1, "輕聲走路"),
+        (2, "必要時，沿途製造些聲響，如吹口哨、講話"),
+        (3, "避免走夜路"),
+        (4, "妥善收存食物、垃圾與廚餘"),
+        (5, "看到熊在遠方時，人要輕聲離開現場"),
+        (6, "單獨行動"),
+        (7, "隨身攜帶哨子或鈴鐺"),
+        (8, "攜帶防熊噴霧"),
+        (9, "其他"),
+    ]
+
     # All Features
     id = models.UUIDField(
         primary_key=True,
@@ -157,6 +177,38 @@ class OhshownEvent(SoftDeleteMixin):
         blank=True, 
         null=True, 
     )
+    ohshown_again = models.IntegerField(
+        blank=True, 
+        null=True, 
+        choices=ohshown_again_list,  
+        help_text='您是否希望以後有機會，或能再次看到野外的黑熊'
+    )
+    ohshown_again_reason = models.CharField(
+        max_length=255, 
+        blank=True, 
+        null=True, 
+        help_text='您是否希望以後有機會，或能再次看到野外的黑熊-為什麼'
+    )
+    prevent_ohshown_methods = ArrayField(
+        models.IntegerField(
+            blank=True, 
+            null=True, 
+            choices=prevent_ohshown_methods_list, 
+            help_text='您知道以下哪些做法有助於減少遇到熊的機會，或避免不愉快地與熊相遇充'
+        ),
+        blank=True, 
+        null=True, 
+    )
+    prevent_ohshown_methods_text_object = JSONField(
+        blank=True, 
+        null=True, 
+        help_text='您知道以下哪些做法有助於減少遇到熊的機會，或避免不愉快地與熊相遇充-文字補充'
+    )
+    survey_if_bear_exist = models.BooleanField(
+        blank=True, 
+        null=True, 
+        help_text='您是否會先了解您預計前往的地點有無黑熊出沒'
+    )
 
     before_release = models.BooleanField(
         default=False
@@ -207,12 +259,16 @@ class OhshownEvent(SoftDeleteMixin):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def translated_ground_type(self):
+    def formated_ground_type(self):
         return format_multiple_choice_options(dict(self.ground_type_list), self.ground_type)
-    def translated_vegetation(self):
+    def formated_vegetation(self):
         return format_multiple_choice_options(dict(self.vegetation_list), self.vegetation)
-    def translated_bear_attractor(self):
+    def formated_bear_attractor(self):
         return format_multiple_choice_options(dict(self.bear_attractor_list), self.bear_attractor)
+    def formated_ohshown_again(self):
+        return dict(self.ohshown_again_list).get(self.ohshown_again, "") + ("(%s)" % self.ohshown_again_reason if self.ohshown_again_reason else "")
+    def formated_prevent_ohshown_methods(self):
+        return format_multiple_choice_options(dict(self.prevent_ohshown_methods_list), self.prevent_ohshown_methods, self.prevent_ohshown_methods_text_object)
 
     class Meta:
         verbose_name = "Ohshown Event"
